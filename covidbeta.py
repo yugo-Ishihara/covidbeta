@@ -25,8 +25,6 @@ df_o = df_owid_covid[['location', 'date', 'total_cases', 'new_cases', 'total_dea
 df_vk = df_vac_kind[['location', 'vaccines']]
 
 w = 'World'
-# country = 'Japan'
-# country = sys.argv[2:]
 print('国名を入れてください')
 country = input()
 country = str(country)
@@ -45,33 +43,20 @@ vac_name = str(vac_kind['vaccines'].iloc[-1])
 dd_w = df_owid_covid.query('location == @w')
 dd = df_country_owid.merge(df_country_vac, how="inner", on = ["date", 'location'])
 dd_ = dd.merge(dd_w, how="inner", on = ["date"])
-# dd['vac_score'] = dd['new_deaths'] / dd['total_vaccinations_per_hundred']
-# dd['vac_boost_score'] = dd['new_deaths'] / dd['total_boosters_per_hundred']
 
-dd_['beta_death_e'] = (dd_['new_deaths_x'] + dd_['new_deaths_y'] + 1) / (dd_['new_deaths_x'] + dd_['new_deaths_y'] + dd_['population_x'] + dd_['population_y'] + 2)
-dd_['beta_case_e'] = (dd_['new_cases_x'] + dd_['new_cases_y'] + 1) / (dd_['new_cases_x'] + dd_['new_cases_y'] + dd_['population_x'] + dd_['population_y'] + 2)
+dd_['beta_death_e'] = (dd_['new_deaths_x'] + dd_['population_x'] + 1) / (dd_['new_deaths_x'] + dd_['new_deaths_y'] + dd_['population_x'] + dd_['population_y'] + 2)
+dd_['beta_case_e'] = (dd_['new_cases_x'] + dd_['population_x'] + 1) / (dd_['new_cases_x'] + dd_['new_cases_y'] + dd_['population_x'] + dd_['population_y'] + 2)
 
 dd.reset_index()
-# dd['vac_score_diff'] = dd['vac_score'].pct_change()
-# dd.to_csv('result.csv')
 
 dd_ = dd_[dd_.shape[0]-730:dd_.shape[0]]
 
 fig = go.Figure()
-# fig.add_trace(go.Scatter(
-#     x=dd['date'], y=dd['vac_score'], mode='lines', name="vac_score", yaxis='y1'))
-# fig.add_trace(go.Scatter(
-#     x=dd['date'], y=dd['vac_boost_score'], mode='lines', name="vac_boost_score", yaxis='y2'))
-# fig.add_trace(go.Scatter(
-#     x=dd['date'], y=dd['vac_score_diff'], mode='lines', name="vac_score_diff", yaxis='y2'))
 
 fig.add_trace(go.Scatter(
     x=dd_['date'], y=dd_['beta_death_e'], mode='lines', name="beta_deaths", yaxis='y1'))
 fig.add_trace(go.Scatter(
     x=dd_['date'], y=dd_['beta_case_e'], mode='lines', name="beta_newcases", yaxis='y2'))
-
-# fig.add_trace(go.Scatter(
-#     x=dd['date'], y=dd['new_deaths'], mode='lines', name="new_deaths", yaxis='y1'))
 
 fig.update_layout(yaxis1=dict(side='left'),
                   yaxis2=dict(side='right', 
