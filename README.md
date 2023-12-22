@@ -8,6 +8,11 @@ https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations
 <img src="https://github.com/yugo-Ishihara/covidbeta/blob/main/covidbeta_usa3.png">
 
 <h1>
+  How to install covidbeta on Linux, MacOS, or WSL on Windows
+</h1>
+$ pip install covidbeta
+
+<h1>
   How to run covidbeta
 </h1>
-$ python covidbeta.py <br>
+$ covidbeta  <br>
